@@ -71,8 +71,8 @@ brakes_codes = {
 byte_6 = {
     0: "FlexRay Kanal",
     1: "XDS",
-    2: "HBA Low",
-    3: "HBA High",
+    2: "HBA Low (Hydraulic Brake Assist)",
+    3: "HBA High (Hydraulic Brake Assist)",
     4: "unknow bit",
     5: "Derivat low",
     6: "Derivat.",
@@ -91,7 +91,7 @@ byte_8 = {
 byte_10 = {
     0: "PP (Parkpilot)",
     1: "STP Staupilot (Start/Stop)",
-    2: "KAS Kreuzungsassistent (Lane Assist)",
+    2: "KAS Kreuzungsassistent (Intersection Assist)",
     3: "KDS Kickdownschalter (kickdown)",
     4: "DTE (Roof rack detection)",
     5: "unknow bit",
@@ -114,7 +114,7 @@ byte_14 = {
     2: "HAL - (Rear Axle Control)",
     3: "ADS -(Audi dynamic steering)",
     4: "LWR - (Headlight corrector)",
-    5: "SSt-R - (exhaust flaps control)",
+    5: "SSt-R - (pressure relief after emergency stop)",
     6: "RKA+ - (Pressure control systems based on ESP)",
     7: "RLE - (Control of wheel bolts tightening)",
 }
@@ -125,7 +125,7 @@ byte_15 = {
     3: "ARA - (Trailer Maneuvering Assistant)",
     4: "GRA - (Speed Limiter PLA)",
     5: "ACC - (Adaptive Cruise Control)",
-    6: "PCF - (Front Collision Prevention)",
+    6: "PCF - (Pre-Crash Function)",
     7: "MKB - (Multi-collision Braking System)",
 }
 byte_16 = {
@@ -133,17 +133,17 @@ byte_16 = {
     1: "EPB - (Electronic Parking Brake)",
     2: "HHC - (Hill Hold Control)",
     3: "HHE - (Hill Hold extended)",
-    4: "HBB - (Hydraulic Brake Booster) BKV via control point",
+    4: "HBB - (Brake booster via control (set) point)",
     5: "BSW - (Brake Disc Wiper,brake disc drying cleaning)",
-    6: "HBC - (High Beam Assist)",
-    7: "LBF - (BlueMotion)",
+    6: "HBC - (Hill Brake Control/Hydraulic Brake Control)",
+    7: "LBF - (Salt scale removal function)",
 }
 byte_17 = {
     0: "EPB - (Actuator low)",
     1: "EPB - (Actuator high)",
     2: "DoA - (Driver out apply low)",
     3: "DoA - (Driver out apply high)",
-    4: "GDP - (Inclination-dependent EPB)",
+    4: "GDP - (Gradient dependent Electronic Parking Brake (EPB))",
     5: "DAA - (Dyn.StartAssist low)",
     6: "DAA - (Dyn.StartAssist high)",
     7: "DAA - (Indication)",

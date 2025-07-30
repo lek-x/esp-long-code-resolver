@@ -18,16 +18,7 @@ The application is built with **FastAPI**, runs in Docker, and includes a simple
 Audi 2016 >=
 ---
 
-## 🖼 Screenshots
-<details>
-
-    ![Web UI](docs/screenshot-ui.png)
-
-</details>
-
----
-
-## 🛠 Tech stack
+## Tech stack
 
 - [FastAPI](https://fastapi.tiangolo.com/) – web framework
 - [Jinja2](https://jinja.palletsprojects.com/) – templates
