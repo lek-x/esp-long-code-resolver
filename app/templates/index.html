@@ -1,106 +1,94 @@
-<!doctype html>
-<html lang="ru">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
   <title>ESP Long Code Decoder</title>
   <style>
-    body { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin: 2rem; }
-    textarea, input { width: 100%; }
-    pre { background: #0b0b0b; color: #e6e6e6; padding: 1rem; overflow-x: auto; white-space: pre-wrap; }
-    .error { color: #c0392b; font-weight: 600; }
-    form { max-width: 800px; }
-    button { padding: .6rem 1rem; margin-top: 10px; margin-right: 10px; }
-    /* Цвета */
-    .green { color: #33ff66; font-weight: 600; }
-    .red   { color: #ff4d4d; font-weight: 600; }
-    .cyan  { color: #73d7ff; }
-    .yellow{ color: #ffc04d; }
-    footer { margin-top: 2rem; font-size: 0.9rem; color: #555; }
-    footer a { color: #3399ff; text-decoration: none; }
-  </style>
+  body {
+    font-family: sans-serif;
+    padding: 1em;
+    max-width: 900px;
+    margin: auto;
+  }
+
+  .tab-btn {
+    padding: 6px 12px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  pre {
+    background-color: black;
+    color: white;
+    padding: 1em;
+    overflow-x: auto;
+  }
+
+  /* ✅ Добавь стили ниже */
+  .green { color: #00ff00; font-weight: bold; }
+  .red { color: #ff4444; font-weight: bold; }
+  .cyan { color: #00ffff; font-weight: bold; }
+  .yellow { color: #ffff00; font-weight: bold; }
+</style>
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    window.onload = function () {
+      switchTab('decode');
+    };
+  </script>
 </head>
 <body>
-  <h1>ESP Long Code Decoder</h1>
-  <form action="/decode" method="post">
-    <label for="code">Hex line (without spaces):</label>
-    <input id="code" name="code" type="text" placeholder="example: 0CAA489928A72A9ED6A64..." required />
+
+<h1>ESP Long Code Decoder</h1>
+
+<button class="tab-btn" onclick="switchTab('decode')">🔎 Decode</button>
+<button class="tab-btn" onclick="switchTab('functions')">🧩 Functions</button>
+
+<!-- Decode tab -->
+<div id="decode" class="tab-content">
+  <form method="post" action="/decode">
+    <label for="code"><strong>Hex line (without spaces):</strong></label><br>
+    <input type="text" id="code" name="code" size="100" placeholder="example: 0CAA489928A72A9ED6A64..." required><br><br>
     <button type="submit">Decode</button>
   </form>
 
-  {% if error %}
-    <p class="error">Error: {{ error }}</p>
-  {% endif %}
-
   {% if result %}
     <h2>Result</h2>
-    <pre id="result-block">{{ result | safe }}</pre>
-    <div>
-      <button id="download-txt" type="button">Download TXT</button>
-      <button id="download-html" type="button">Download HTML</button>
-    </div>
+    <pre>{{ result | safe }}</pre>
+  {% elif error %}
+    <div style="color: red;">{{ error }}</div>
   {% endif %}
+</div>
 
-  <footer>
-    <p>Author: <strong>Roman Mezentsev</strong> |
-       Email: <a href="mailto:rsmezentsev@outlook.com">rsmezentsev@outlook.com </a> |
-       GitHub: <a href="https://github.com/lek-x/esp-long-code-resolver.git" target="_blank">https://github.com/lek-x/esp-long-code-resolver.git</a>
-    </p>
-  </footer>
-
-  <script>
-    const btnTxt = document.getElementById("download-txt");
-    const btnHtml = document.getElementById("download-html");
-
-    if (btnTxt) {
-      btnTxt.addEventListener("click", () => {
-        const text = document.getElementById("result-block").innerText;
-        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "longcoding_result.txt";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-    }
-
-    if (btnHtml) {
-      btnHtml.addEventListener("click", () => {
-        const html = document.getElementById("result-block").innerHTML;
-        const template = `
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<title>Long Coding Result</title>
-<style>
-  body { background: #0b0b0b; color: #e6e6e6; font-family: monospace; padding: 1rem; }
-  .green { color: #33ff66; font-weight: 600; }
-  .red   { color: #ff4d4d; font-weight: 600; }
-  .cyan  { color: #73d7ff; }
-  .yellow{ color: #ffc04d; }
-  pre { white-space: pre-wrap; }
-</style>
-</head>
-<body>
-<pre>${html}</pre>
-</body>
-</html>
-        `;
-        const blob = new Blob([template], { type: "text/html;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "longcoding_result.html";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-    }
-  </script>
+<!-- Features tab -->
+<div id="functions" class="tab-content">
+  <h2>Known Functions</h2>
+  <ul>
+    {% for abbr, desc, status in car_features %}
+      <li><strong>{{ abbr }}</strong>: {{ desc }} {% if status == "✔" %}✅{% elif status == "?" %}❓{% endif %}</li>
+    {% endfor %}
+  </ul>
+</div>
+<hr>
+<p style="font-size: 0.9em;">
+    <strong>Author:</strong> Roman Mezentsev |
+    <strong>Email:</strong> <a href="mailto:rsmezentsev@outlook.com">rsmezentsev@outlook.com</a> |
+    <strong>GitHub:</strong> <a href="https://github.com/lek-x/esp-long-code-resolver.git" target="_blank">
+        https://github.com/lek-x/esp-long-code-resolver.git
+    </a> |
+    <strong>version:</strong> 0.2.0
+</p>
 </body>
 </html>

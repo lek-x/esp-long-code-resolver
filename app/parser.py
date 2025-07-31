@@ -41,8 +41,8 @@ SCALE = 16
 BITS = 8
 
 unknown_bit = YELLOW("Unknown Bit")
-activated = GREEN("Activated")
-deactivated = CYAN("Deactivated")
+activated = GREEN("Enabled")
+deactivated = CYAN("Disabled")
 
 engine_codes = {
     "40": "2.0 TFSI",
@@ -53,19 +53,25 @@ engine_codes = {
 }
 car_model = {"99": "A4", "97": "A6", "9A": "S5", "BE": "Q5", "B2": "Q7"}
 transmission_codes = {
-    "2C": "0CJ",
-    "10": "0CK",
-    "30": "0D5",
-    "28": "0CL quattro",
+    "2C": "0CJ (quattro ultra)",
+    "10": "0CK (fwd)",
+    "30": "0D5 (8-gears qauttro)",
+    "28": "0CL (quattro)",
     "20": "Manual-400Nm",
     "08": "Manual-380Nm",
 }
 
 brakes_codes = {
-    "12": "Brakes front 338 (1LF)x330(1KJ)",
+    "12": "Brakes front 338(1LF)x330(1KJ)",
     "0E": "Brakes front 338(1LE)x330(1KF, 1KJ)",
     "32": "Brakes front 375(1LM,1LX,1LY,1LZ)X330(1KP,1KR,1KQ,1KY)",
-    "04": "Brakes front 314(1LC,1LD,1LG)x300(1KD,1KI,1KE)",
+    "04": "Brakes front 314(1LD,1LG)x300(1KD,1KI,1KE)",
+    "0C": "Brakes front 318(1LC)x300(1KD)",
+    "14": "Brakes front 338(1LE)x330(1KF/1KJ)",
+    "18": "Brakes front 338(1LF)x330(1KJ)",
+    "08": "Brakes front 314(1LB)x300(1KE)",
+    "1C": "Brakes front 350(????)x330(???)",
+    "50": "Brakes front 375(????)x330(????)",
 }
 
 byte_6 = {
@@ -139,8 +145,8 @@ byte_16 = {
     7: "LBF - (Salt scale removal function)",
 }
 byte_17 = {
-    0: "EPB - (Actuator low)",
-    1: "EPB - (Actuator high)",
+    0: "EPB - (Actor low)",
+    1: "EPB - (Actor high)",
     2: "DoA - (Driver out apply low)",
     3: "DoA - (Driver out apply high)",
     4: "GDP - (Gradient dependent Electronic Parking Brake (EPB))",
@@ -255,8 +261,11 @@ def parse_code(code: str) -> dict:
                 state_html = GREEN(state_text) if is_on else CYAN(state_text)
 
                 text_lines.append(f"  Bit {bit_no}: {desc} - {state_text}")
+                # html_lines.append(
+                #     f"&nbsp;&nbsp;{esc('Bit ')}{esc(bit_no)}{esc(': ')}{esc(desc)}{esc(' - ')}# {state_html}"
+                # )
                 html_lines.append(
-                    f"&nbsp;&nbsp;{esc('Bit ')}{esc(bit_no)}{esc(': ')}{esc(desc)}{esc(' - ')}{state_html}"
+                    f"&nbsp;&nbsp;{esc('Bit ')}{esc(bit_no)}{esc(': ')}{esc(desc)}{esc(' - ')} {state_html}"
                 )
 
     # Mirror checks
