@@ -50,6 +50,8 @@ engine_codes = {
     "14": "3.0 TFSI",
     "6C": "2.9 TFSI",
     "3A": "4.0 TDI",
+    "04": "1.4 TFSI",
+    "2C": "3.0 TDI",
 }
 car_model = {"99": "A4", "97": "A6", "9A": "S5", "BE": "Q5", "B2": "Q7"}
 transmission_codes = {
@@ -129,7 +131,7 @@ byte_15 = {
     1: "S/S - (start/stop)",
     2: "NV - (Night Vision)",
     3: "ARA - (Trailer Maneuvering Assistant)",
-    4: "GRA - (Speed Limiter PLA)",
+    4: "GRA - (Speed Limiter and Cruise Control)",
     5: "ACC - (Adaptive Cruise Control)",
     6: "PCF - (Pre-Crash Function)",
     7: "MKB - (Multi-collision Braking System)",
