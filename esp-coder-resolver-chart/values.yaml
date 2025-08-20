@@ -25,5 +25,6 @@ espfrontend:
     nginxPasswdConf:
       name: nginx-esp-passwd-conf
       volumeName: nginx-passwd-conf-volume-esp
+  nginxpasswd: test:xxxxxxxxxxxxxxxxxxxx
 
 namespace: esp

@@ -6,4 +6,4 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   htpasswd: |
-    test:xxxdxdxdxdxdxdxdxdxdxdxd
+    {{ .Values.espfrontend.nginxpasswd }}
