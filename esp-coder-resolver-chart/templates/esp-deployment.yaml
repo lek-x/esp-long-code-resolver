@@ -37,7 +37,7 @@ spec:
           volumeMounts:
             - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
               mountPath: /etc/nginx/.htpasswd
-              subPath: htpasswd
+              subPath: .htpasswd
             - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
