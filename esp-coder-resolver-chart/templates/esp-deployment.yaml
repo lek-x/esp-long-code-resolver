@@ -34,3 +34,5 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.espfrontend.service.targetPort }}
+      imagePullSecrets:
+        {{- toYaml .Values.espfrontend.imagePullSecrets | nindent 6 }}
