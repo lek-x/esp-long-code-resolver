@@ -1,0 +1,22 @@
+---
+espfrontend:
+  replicaCount: 1
+  image:
+    repository: xxxxx
+    pullPolicy: IfNotPresent
+    tag: "vx.x.x"
+  registryAuth: true
+  imagePullSecrets:
+    - name: github-secret
+  vault:
+    enabled: false
+  podLabels:
+    app: esp-code-resolver
+    tier: frontend
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8000
+    nodePort: 30777
+
+namespace: esp

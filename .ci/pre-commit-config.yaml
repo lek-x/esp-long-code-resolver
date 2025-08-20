@@ -1,5 +1,6 @@
+---
 default_language_version:
-    python: python3
+  python: python3
 
 repos:
   - repo: 'https://github.com/pre-commit/pre-commit-hooks'
@@ -14,7 +15,6 @@ repos:
       - id: check-merge-conflict
       - id: check-json
       - id: check-toml
-      - id: check-yaml
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.3
@@ -36,3 +36,8 @@ repos:
           - --rcfile=.ci/.pylintrc
         types:
           - python
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args: ['-c=.ci/yamllint']

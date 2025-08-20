@@ -2,7 +2,8 @@
 # Based on ansible-lint config
 extends: default
 
-ignore: ""
+ignore:
+  - esp-coder-resolver-chart/templates/
 
 yaml-files:
   - "*.yaml"

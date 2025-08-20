@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "esp-code-resolver.fullname" . }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+{{- include "esp-code-resolver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.espfrontend.replicaCount }}
+  selector:
+    matchLabels:
+{{- include "esp-code-resolver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+{{- include "esp-code-resolver.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
+        {{- if .Values.espfrontend.podLabels }}
+{{- toYaml .Values.espfrontend.podLabels | nindent 8 }}
+        {{- end }}
+
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-espfrontend
+          image: "{{ .Values.espfrontend.image.repository }}:{{ .Values.espfrontend.image.tag | default "v0.2.0" }}"
+          ports:
+            - containerPort: {{ .Values.espfrontend.service.targetPort }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.espfrontend.service.targetPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.espfrontend.service.targetPort }}
