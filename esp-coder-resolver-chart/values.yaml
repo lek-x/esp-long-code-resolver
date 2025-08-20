@@ -18,5 +18,12 @@ espfrontend:
     port: 80
     targetPort: 8000
     nodePort: 30777
+  configMaps:
+    nginxGlobalConf:
+      name: nginx-global-conf-esp
+      volumeName: nginx-global-conf-volume-esp
+    nginxPasswdConf:
+      name: nginx-esp-passwd-conf
+      volumeName: nginx-passwd-conf-volume-esp
 
 namespace: esp

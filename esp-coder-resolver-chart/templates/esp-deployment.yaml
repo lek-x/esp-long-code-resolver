@@ -34,5 +34,20 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.espfrontend.service.targetPort }}
+          volumeMounts:
+            - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
+              mountPath: /etc/nginx/.htpasswd
+              subPath: htpasswd
+            - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+
       imagePullSecrets:
         {{- toYaml .Values.espfrontend.imagePullSecrets | nindent 6 }}
+      volumes:
+        - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
+          configMap:
+            name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.name }}
+        - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
+          configMap:
+            name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.name }}

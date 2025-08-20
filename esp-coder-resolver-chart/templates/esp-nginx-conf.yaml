@@ -1,0 +1,77 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.name }}
+  namespace: {{ .Values.namespace }}
+data:
+  nginx.conf: |
+    worker_processes auto;
+
+    events {
+        worker_connections 1024;
+    }
+
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+        sendfile      on;
+        keepalive_timeout  65;
+
+        gzip on;
+        gzip_types text/plain application/json text/css application/javascript text/javascript;
+
+
+        limit_req_zone $binary_remote_addr zone=api_rate:10m rate=10r/s;
+
+        upstream api {
+            server 127.0.0.1:8001;
+            keepalive 32;
+        }
+
+        map $request_uri $block_attack {
+            default 0;
+            "~*(?:;|%3B|\||%7C|`|%60|\$\(.*\)|%24%28.*%29).*(wget|curl|bash|sh|chmod|chown|nc|busybox|tftp|ftpget|pkill|killall)" 1;
+            "~*(\.\./|%2e%2e/)" 1;
+        }
+
+        map $uri $is_device_rsp {
+            default 0;
+            =/device.rsp 1;
+        }
+
+        server {
+            listen 80;
+            server_name _;
+
+            client_max_body_size 1m;
+            proxy_read_timeout 75s;
+            proxy_connect_timeout 5s;
+            proxy_send_timeout 75s;
+
+            if ($is_device_rsp) { return 444; }
+            if ($block_attack)  { return 444; }
+
+            location = /healthz {
+                proxy_pass http://api/healthz;
+                access_log off;
+            }
+
+            location / {
+                limit_req zone=api_rate burst=20 nodelay;
+
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+
+                proxy_http_version 1.1;
+                proxy_set_header Connection "";
+
+                proxy_pass http://api;
+
+                auth_basic           "Restricted Access";
+                auth_basic_user_file /etc/nginx/.htpasswd;
+            }
+        }
+    }
