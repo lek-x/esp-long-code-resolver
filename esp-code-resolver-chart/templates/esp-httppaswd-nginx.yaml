@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.espfrontend.configMaps.nginxPasswdConf.name | default (printf "%s-nginx-passwd-conf" (include "esp-code-resolver.fullname" .)) }}"
+  labels:
+{{- include "esp-code-resolver.labels" . | nindent 4 }}
+data:
+  .htpasswd: |-
+{{- nindent 4 .Values.espfrontend.nginxpasswd }}

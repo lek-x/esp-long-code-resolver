@@ -47,7 +47,7 @@ spec:
       volumes:
         - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
           configMap:
-            name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.name }}
+            name: {{ default (printf "%s-nginx-passwd-conf" (include "esp-code-resolver.fullname" .)) .Values.espfrontend.configMaps.nginxPasswdConf.name }}
         - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
           configMap:
-            name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.name }}
+            name: {{ default (printf "%s-nginx-global-conf" (include "esp-code-resolver.fullname" .)) .Values.espfrontend.configMaps.nginxGlobalConf.name }}

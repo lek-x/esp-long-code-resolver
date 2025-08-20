@@ -40,4 +40,4 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-        args: ['-c=.ci/yamllint']
+        args: ["-c=.ci/.yamllint"]
