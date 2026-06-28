@@ -51,12 +51,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Names of internal resources.
 */}}
-{{- define "esp-code-resolver.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "esp-code-resolver.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- define "esp-code-resolver.serviceName" -}}
+{{- printf "%s-service" (include "esp-code-resolver.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end }}
+
+{{- define "esp-code-resolver.nginxConfigName" -}}
+{{- printf "%s-nginx" (include "esp-code-resolver.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "esp-code-resolver.basicAuthSecretName" -}}
+{{- printf "%s-basic-auth" (include "esp-code-resolver.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end }}

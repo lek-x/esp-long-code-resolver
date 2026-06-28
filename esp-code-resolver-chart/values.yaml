@@ -1,30 +1,25 @@
 ---
-espfrontend:
-  replicaCount: 1
-  image:
-    repository: xxxxx
-    pullPolicy: IfNotPresent
-    tag: "vx.x.x"
-  registryAuth: true
-  imagePullSecrets:
-    - name: github-secret
-  vault:
-    enabled: false
-  podLabels:
-    app: esp-code-resolver
-    tier: frontend
-  service:
-    type: NodePort
-    port: 80
-    targetPort: 8000
-    nodePort: 30777
-  configMaps:
-    nginxGlobalConf:
-      name: nginx-global-conf-esp
-      volumeName: nginx-global-conf-volume-esp
-    nginxPasswdConf:
-      name: nginx-esp-passwd-conf
-      volumeName: nginx-passwd-conf-volume-esp
-  nginxpasswd: test:xxxxxxxxxxxxxxxxxxxx
+replicaCount: 1
 
-namespace: esp
+image:
+  repository: xxxxx
+  pullPolicy: IfNotPresent
+  # Uses Chart.appVersion when empty.
+  tag: ""
+
+imagePullSecrets:
+  - name: github-secret
+
+nameOverride: ""
+fullnameOverride: ""
+
+podLabels: {}
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30777
+
+basicAuth:
+  # Output of: htpasswd -nb USER PASSWORD
+  htpasswd: "test:xxxxxxxxxxxxxxxxxxxx"

@@ -6,8 +6,7 @@ dist/
 wheels/
 *.egg-info
 .ruff_cache/
+docker/
 
 # Virtual environments
 .venv
-Dockerfile
-entrypoint.sh

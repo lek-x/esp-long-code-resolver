@@ -2,52 +2,57 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "esp-code-resolver.fullname" . }}-deployment
-  namespace: {{ .Values.namespace }}
+  name: {{ include "esp-code-resolver.fullname" . }}
   labels:
-{{- include "esp-code-resolver.labels" . | nindent 4 }}
+    {{- include "esp-code-resolver.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.espfrontend.replicaCount }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-{{- include "esp-code-resolver.selectorLabels" . | nindent 6 }}
+      {{- include "esp-code-resolver.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-{{- include "esp-code-resolver.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: frontend
-        {{- if .Values.espfrontend.podLabels }}
-{{- toYaml .Values.espfrontend.podLabels | nindent 8 }}
+        {{- include "esp-code-resolver.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
-
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-        - name: {{ .Chart.Name }}-espfrontend
-          image: "{{ .Values.espfrontend.image.repository }}:{{ .Values.espfrontend.image.tag | default "v0.2.0" }}"
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.espfrontend.service.targetPort }}
+            - name: http
+              containerPort: 8000
+              protocol: TCP
           readinessProbe:
-            tcpSocket:
-              port: {{ .Values.espfrontend.service.targetPort }}
+            httpGet:
+              path: /healthz
+              port: http
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
-              port: {{ .Values.espfrontend.service.targetPort }}
+            httpGet:
+              path: /healthz
+              port: http
           volumeMounts:
-            - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
+            - name: basic-auth
               mountPath: /etc/nginx/.htpasswd
               subPath: .htpasswd
-            - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
+              readOnly: true
+            - name: nginx-config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
-
-      imagePullSecrets:
-        {{- toYaml .Values.espfrontend.imagePullSecrets | nindent 6 }}
+              readOnly: true
       volumes:
-        - name: {{ .Values.espfrontend.configMaps.nginxPasswdConf.volumeName }}
+        - name: basic-auth
+          secret:
+            secretName: {{ include "esp-code-resolver.basicAuthSecretName" . }}
+        - name: nginx-config
           configMap:
-            name: {{ default (printf "%s-nginx-passwd-conf" (include "esp-code-resolver.fullname" .)) .Values.espfrontend.configMaps.nginxPasswdConf.name }}
-        - name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.volumeName }}
-          configMap:
-            name: {{ default (printf "%s-nginx-global-conf" (include "esp-code-resolver.fullname" .)) .Values.espfrontend.configMaps.nginxGlobalConf.name }}
+            name: {{ include "esp-code-resolver.nginxConfigName" . }}

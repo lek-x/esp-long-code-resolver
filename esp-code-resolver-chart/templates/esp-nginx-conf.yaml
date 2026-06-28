@@ -2,8 +2,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.espfrontend.configMaps.nginxGlobalConf.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ include "esp-code-resolver.nginxConfigName" . }}
+  labels:
+    {{- include "esp-code-resolver.labels" . | nindent 4 }}
 data:
   nginx.conf: |
     worker_processes auto;
@@ -40,7 +41,7 @@ data:
         }
 
         server {
-            listen 80;
+            listen 8000;
             server_name _;
 
             client_max_body_size 1m;

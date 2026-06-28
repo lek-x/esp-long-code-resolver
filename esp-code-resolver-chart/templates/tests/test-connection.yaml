@@ -11,6 +11,8 @@ spec:
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
-      args: ["{{ include "esp-code-resolver.fullname" . }}:{{ .Values.espfrontend.service.targetPort }}"]
+      command: ["wget"]
+      args:
+        - "--spider"
+        - "http://{{ include "esp-code-resolver.serviceName" . }}:{{ .Values.service.port }}/healthz"
   restartPolicy: Never
