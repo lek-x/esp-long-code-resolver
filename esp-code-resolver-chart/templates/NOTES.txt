@@ -1,1 +1,15 @@
----
+ESP Code Resolver has been deployed.
+
+{{- if eq .Values.service.type "NodePort" }}
+
+Open the application at:
+  http://<node-ip>:{{ .Values.service.nodePort }}
+{{- else }}
+
+Forward the service locally:
+  kubectl --namespace {{ .Release.Namespace }} port-forward \
+    service/{{ include "esp-code-resolver.serviceName" . }} 8000:{{ .Values.service.port }}
+
+Then open:
+  http://127.0.0.1:8000
+{{- end }}

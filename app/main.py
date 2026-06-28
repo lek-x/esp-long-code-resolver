@@ -114,7 +114,9 @@ def healthz():
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     return templates.TemplateResponse(
-        "index.html", {"request": request, "car_features": CAR_FEATURES}
+        request=request,
+        name="index.html",
+        context={"car_features": CAR_FEATURES},
     )
 
 
@@ -124,9 +126,9 @@ async def decode_form(request: Request, code: str = Form(...)):
         data = parse_code(code)
         html_text = data["html"]
         return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
+            request=request,
+            name="index.html",
+            context={
                 "result": html_text,
                 "error": None,
                 "car_features": CAR_FEATURES,  # ✅ добавляем!
@@ -134,9 +136,9 @@ async def decode_form(request: Request, code: str = Form(...)):
         )
     except Exception as e:
         return templates.TemplateResponse(
-            "index.html",
-            {
-                "request": request,
+            request=request,
+            name="index.html",
+            context={
                 "result": None,
                 "error": str(e),
                 "car_features": CAR_FEATURES,  # ✅ добавляем!

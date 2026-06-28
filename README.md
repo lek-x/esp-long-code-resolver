@@ -20,6 +20,7 @@ Audi 2016 >=
 
 ## Tech stack
 
+- Python 3.14
 - [FastAPI](https://fastapi.tiangolo.com/) – web framework
 - [Jinja2](https://jinja.palletsprojects.com/) – templates
 - [uv](https://docs.astral.sh/uv/) – fast package manager for Python

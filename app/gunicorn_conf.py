@@ -1,8 +1,7 @@
 import os
-import multiprocessing
 
-bind = "0.0.0.0:8000"
-workers = int(os.getenv("WORKERS", multiprocessing.cpu_count() * 2 + 1))
+bind = "127.0.0.1:8001"
+workers = int(os.getenv("WORKERS", "2"))
 threads = int(os.getenv("THREADS", "2"))
 worker_class = "uvicorn.workers.UvicornWorker"
 timeout = int(os.getenv("TIMEOUT", "60"))
